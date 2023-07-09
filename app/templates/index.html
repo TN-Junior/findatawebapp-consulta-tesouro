@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <div class="jumbotron">
+      <div class="container">
+        <h1><i>FinData</i></h1>
+        <p>O hub da equipe de dados da Sefin/PCR.</p>
+      </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+              <h2>Monitoramento</h2>
+              <p>
+                  Projetos monitorados pelo GAB
+              </p>
+              <p><a class="btn btn-default" href="dashboards/monitoramento" role="button">Acessar &raquo;</a></p>
+            </div>
+            <div class="col-md-3">
+              <h2>Arrecadação Tributária</h2>
+              <p>
+                  Arrecadação de IPTU, ISS, ITBI Taxas e demais receitas advindas de pagamentos de DAM (base quente)
+              </p>
+              <p><a class="btn btn-default" href="dashboards/base-quente" role="button">Acessar &raquo;</a></p>
+           </div>
+            <div class="col-md-3">
+              <h2>Capag</h2>
+              <p>
+                  A análise da capacidade de pagamento (CAPAG) apura a situação fiscal dos Entes Subnacionais que querem contrair novos empréstimos com garantia da União.
+              </p>
+              <p><a class="btn btn-default" href="dashboards/capag" role="button">Acessar &raquo;</a></p>
+            </div>
+            <div class="col-md-3">
+              <h2>CAF</h2>
+              <p>
+                  Conselho Administrativo Fiscal
+              </p>
+              <p><a class="btn btn-default" href="dashboards/caf" role="button">Acessar &raquo;</a></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <h2>Tesouro Regional</h2>
+                <p>
+                  Dados de arrecadação tributária entre Recife e as demais capitais
+                  do país. Fonte: RREO, anexo 3, STN.
+                </p>
+                <p><a class="btn btn-default" href="dashboards/stn"
+                    role="button">Acessar &raquo;</a></p>
+            </div>
+            <div class="col-md-3">
+                <h2>Central de Previsões</h2>
+                <p>Tabelas com previsões para diversas áreas da Sefin.</p>
+                <p><a class="btn btn-default" href="dashboards/central"
+                    role="button">Acessar &raquo;</a></p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

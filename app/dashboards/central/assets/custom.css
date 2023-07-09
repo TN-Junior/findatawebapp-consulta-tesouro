@@ -1,0 +1,19 @@
+#tabela-painel-fiscal button.export {
+    display: none;
+}
+
+#tabela-ggaf button.export {
+    display: none;
+}
+
+#tabela-rri button.export {
+    display: none;
+}
+
+#tabela-rcl button.export {
+    display: none;
+}
+
+#tabela-liquidez button.export {
+    display: none;
+}
