@@ -74,6 +74,15 @@ def create_app(config_class=Config):
         app, 'Central de Previsões', 'central', layout, client_calls
     )
 
+    from app.dashboards.consulta_tesouro.layout import layout
+    from app.dashboards.consulta_tesouro.callbacks import callbacks
+    register_dash_app(
+        app, 'Consulta Tesouro', 'consulta_tesouro', layout, callbacks
+    )
+
+
+
+
     # the code above creates a SMTPHandler instance to only reports errors
     # and finally attaches it to the app.logger object from Flask
     if not app.debug:
