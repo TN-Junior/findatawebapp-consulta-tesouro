@@ -54,7 +54,6 @@ def generate_output_table(data):
 
 
 
-
 df_municipio = carrega_municipios()
 documentos = ["RREO", "RGF"]
 
@@ -84,6 +83,7 @@ layout = html.Div(
                 html.Button("Extrair dados", id="extract-button"),
                 html.Table(id="output-table"),
                 html.Div(id="output-data"),
+
             ],
         ),
         dcc.Download(id="download-link", data=None),
@@ -92,7 +92,48 @@ layout = html.Div(
     style={"background-color": "white"},
 )
 
+@app.callback(
+    [Output("output-data", "children"),
+     Output("download-link", "data")],
+    [Input("extract-button", "n_clicks")],
+    [
+        State("documento-dropdown", "value"),
+        State("anos-dropdown", "value"),
+        State("periodos-dropdown", "value"),
+        State("entes-dropdown", "value"),
+        State("anexo-dropdown", "value"),
+    ]
+)
+def update_output_data(n_clicks, documento, anos, periodos, entes, anexo):
+    if n_clicks is None:
+        return [], None
 
+    if not (documento and anos and periodos and entes and anexo):
+        return "Por favor, preencha todos os campos", None
+
+    df_municipios_filtered = df_municipio[df_municipio["cod_completo"].isin(entes)]
+    cod_entes = df_municipios_filtered["cod_completo"].tolist()
+    nome_entes = df_municipios_filtered["nome_municipio"].tolist()
+
+    data = extract(anos, periodos, documento, anexo, cod_entes, nome_entes)
+
+    table = generate_output_table(data)
+
+    # Criar um objeto de arquivo em memória
+    buffer = io.BytesIO()
+    csv = convert_df(data)
+    buffer.write(csv)
+    buffer.seek(0)
+
+    # Codificar o arquivo em base64
+    csv_base64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
+
+    # Definir o conteúdo do arquivo e o nome do arquivo para download
+    content = "cd_municipio_.xlsx/csv;base64," + csv_base64
+    filename = "dados_extraidos.csv"
+
+    # Retornar os dados para download e a tabela de dados
+    return table, dict(content=content, filename=filename)
 
 if __name__ == "__main__":
     app.run_server()
