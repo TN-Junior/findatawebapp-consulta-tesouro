@@ -1,3 +1,4 @@
+#layout
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -8,11 +9,10 @@ import base64
 import io
 
 from app.dashboards.utils import components
-#from app.dashboards.consulta_tesouro.components import dcc_embed
-from app.dashboards.consulta_tesouro.SiconfiHandler import SiconfiHandler
+from app.dashboards.consulta_tesouro.SiconfiHandler import SiconfiHandler  # Import the SiconfiHandler class
 
 app = dash.Dash(__name__)
-server = app.server  # Configuração do servidor
+server = app.server
 
 def carrega_municipios():
     df_municipio = pd.read_excel(
@@ -28,20 +28,23 @@ def convert_df(df):
 
 
 def extract(anos, periodos, documento, anexo, cod_entes, nome_entes):
-    sh = SiconfiHandler()
+    sh = SiconfiHandler()  # Initialize the SiconfiHandler
     dfs = []
     for ano in anos:
         for periodo in periodos:
             for cod_ente, municipio in zip(cod_entes, nome_entes):
-                sh.mount_url(
-                    ano, periodo, documento, anexo, cod_ente, municipio, debug=True
-                )
-                print(
-                    f"Extraindo {documento} - {municipio} - {periodo} - {ano} ANEXO {documento}"
-                )
-                df = sh.receive_data()
-                dfs.append(df)
-                time.sleep(0.5)
+                try:
+                    sh.mount_url(
+                        ano, periodo, documento, anexo, cod_ente, municipio, debug=True
+                    )
+                    print(
+                        f"Extraindo {documento} - {municipio} - {periodo} - {ano} ANEXO {documento}"
+                    )
+                    df = sh.receive_data()
+                    dfs.append(df)
+                    time.sleep(0.5)
+                except Exception as e:
+                    print(f"Error extracting data: {str(e)}")
     df = pd.concat(dfs)
     return df
 
@@ -83,6 +86,7 @@ layout = html.Div(
                 html.Button("Extrair dados", id="extract-button"),
                 html.Table(id="output-table"),
                 html.Div(id="output-data"),
+                html.Div(id="output-div"),
 
             ],
         ),
@@ -92,48 +96,6 @@ layout = html.Div(
     style={"background-color": "white"},
 )
 
-@app.callback(
-    [Output("output-data", "children"),
-     Output("download-link", "data")],
-    [Input("extract-button", "n_clicks")],
-    [
-        State("documento-dropdown", "value"),
-        State("anos-dropdown", "value"),
-        State("periodos-dropdown", "value"),
-        State("entes-dropdown", "value"),
-        State("anexo-dropdown", "value"),
-    ]
-)
-def update_output_data(n_clicks, documento, anos, periodos, entes, anexo):
-    if n_clicks is None:
-        return [], None
-
-    if not (documento and anos and periodos and entes and anexo):
-        return "Por favor, preencha todos os campos", None
-
-    df_municipios_filtered = df_municipio[df_municipio["cod_completo"].isin(entes)]
-    cod_entes = df_municipios_filtered["cod_completo"].tolist()
-    nome_entes = df_municipios_filtered["nome_municipio"].tolist()
-
-    data = extract(anos, periodos, documento, anexo, cod_entes, nome_entes)
-
-    table = generate_output_table(data)
-
-    # Criar um objeto de arquivo em memória
-    buffer = io.BytesIO()
-    csv = convert_df(data)
-    buffer.write(csv)
-    buffer.seek(0)
-
-    # Codificar o arquivo em base64
-    csv_base64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
-
-    # Definir o conteúdo do arquivo e o nome do arquivo para download
-    content = "cd_municipio_.xlsx/csv;base64," + csv_base64
-    filename = "dados_extraidos.csv"
-
-    # Retornar os dados para download e a tabela de dados
-    return table, dict(content=content, filename=filename)
 
 if __name__ == "__main__":
     app.run_server()
