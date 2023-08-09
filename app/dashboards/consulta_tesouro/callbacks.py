@@ -3,6 +3,7 @@
 from dash import Dash, State, Input, Output, html, dcc
 from app.dashboards.consulta_tesouro.layout import extract, carrega_municipios, generate_output_table, convert_df
 import pandas as pd
+import base64
 
 # Carregando a lista de municípios
 df_municipio = carrega_municipios()
@@ -24,7 +25,7 @@ def callbacks(app):
             State("anexo-dropdown", "value"),
         ]
     )
-    def extract_data(n_clicks, documento, anos, periodos, entes, anexo):
+    def extract_and_download_data(n_clicks, documento, anos, periodos, entes, anexo):
         # Retorna uma lista vazia na carga inicial da página ou atualização
         if n_clicks is None:
             return []
@@ -41,23 +42,31 @@ def callbacks(app):
         # Extrai os dados usando a função 'extract'
         data = extract(anos, periodos, documento, anexo, cod_entes, nome_entes)
 
+        # Converta o DataFrame para CSV
+        csv_data = data.to_csv(index=False).encode("utf-8")
+
+        # Cria o componente de download (âncora) com o link para download
+        download_link = html.A(
+            "Clique aqui para fazer o download dos dados",
+            href=f"data:text/csv;base64,{base64.b64encode(csv_data).decode()}",
+            download="dados_extraidos.csv",
+            target="_blank",  # Abrir o link em uma nova guia
+        )
+
         # Prepara a saída para exibição no aplicativo
         output_children = [
             html.H3("", style={"color": "black"}),
+            download_link,
             html.Table(
                 # Cabeçalho da tabela
                 [html.Tr([html.Th(col) for col in data.columns])] +
                 # Linhas da tabela
                 [html.Tr([html.Td(val) for val in row]) for row in data.values],
                 style={"border": "1px solid black", "border-collapse": "collapse"}
-
-
             )
         ]
 
         return output_children
-
-
 
 
 # Registra os callbacks e executa o servidor
