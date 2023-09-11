@@ -5,6 +5,7 @@ from app.dashboards.consulta_tesouro.layout import extract, carrega_municipios, 
 import pandas as pd
 import base64
 
+
 # Carregando a lista de municípios
 df_municipio = carrega_municipios()
 
@@ -67,7 +68,6 @@ def callbacks(app):
         ]
 
         return output_children
-
 
 # Registra os callbacks e executa o servidor
 if __name__ == "__main__":

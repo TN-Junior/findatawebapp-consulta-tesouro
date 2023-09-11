@@ -46,6 +46,7 @@ def extract(anos, periodos, documento, anexo, cod_entes, nome_entes):
                 except Exception as e:
                     print(f"Error extracting data: {str(e)}")
     df = pd.concat(dfs)
+    print("Total de dados extraídos:", len(df))  # Adicione esta linha para verificar o número de linhas no DataFrame
     return df
 
 def generate_output_table(data):
@@ -87,10 +88,13 @@ layout = html.Div(
                 html.Table(id="output-table"),
                 html.Div(id="output-data"),
                 html.Div(id="output-div"),
+                dcc.Download(id="download-link", data=None),
+
+
 
             ],
         ),
-        dcc.Download(id="download-link", data=None),
+        
         components.footer,
     ],
     style={"background-color": "white"},
@@ -101,5 +105,3 @@ if __name__ == "__main__":
     app.run_server()
 
 
-
-#quase finalizado
