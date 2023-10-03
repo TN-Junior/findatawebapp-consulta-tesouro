@@ -69,3 +69,4 @@ class SiconfiHandler:
         except Exception as e:
             print(f"Error during data retrieval: {str(e)}")
             return None
+ 
