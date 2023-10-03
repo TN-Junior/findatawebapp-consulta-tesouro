@@ -5,11 +5,10 @@ import dash_html_components as html
 #from dash.dependencies import Input, Output, State
 import pandas as pd
 import time
-import base64
-import io
 
 from app.dashboards.utils import components
-from app.dashboards.consulta_tesouro.SiconfiHandler import SiconfiHandler  # Import the SiconfiHandler class
+from app.dashboards.consulta_tesouro.src.SiconfiHandler import SiconfiHandler  # Import the SiconfiHandler class
+
 
 app = dash.Dash(__name__)
 server = app.server
@@ -28,6 +27,12 @@ def convert_df(df):
 
 
 def extract(anos, periodos, documento, anexo, cod_entes, nome_entes):
+    print("Anos:", anos)
+    print("Períodos:", periodos)
+    print("Documento:", documento)
+    print("Anexo:", anexo)
+    print("Códigos de Ente:", cod_entes)
+    print("Nomes de Ente:", nome_entes)
     sh = SiconfiHandler()  # Initialize the SiconfiHandler
     dfs = []
     for ano in anos:
@@ -38,7 +43,7 @@ def extract(anos, periodos, documento, anexo, cod_entes, nome_entes):
                         ano, periodo, documento, anexo, cod_ente, municipio, debug=True
                     )
                     print(
-                        f"Extraindo {documento} - {municipio} - {periodo} - {ano} ANEXO {documento}"
+                        f"Extraindo {documento} - {municipio} - {periodo} - {ano} ANEXO {anexo}"
                     )
                     df = sh.receive_data()
                     dfs.append(df)
@@ -54,6 +59,7 @@ def generate_output_table(data):
         [html.Tr([html.Th(col) for col in data.columns])] +
         [html.Tr([html.Td(val) for val in row]) for row in data.values],
         id="output-table-data"
+        
     )
 
 
@@ -71,7 +77,7 @@ layout = html.Div(
             ],
         ),
         html.Div(
-            style={"background-color": "#0f3057", "padding": "20px", "border-radius": "10px", "margin": "0 auto", "max-width": "600px"},
+            style={"background-color": "#0f3057", "padding": "20px", "border-radius": "10px", "margin": "0 auto", "max-width": "600px", "max-height": "80vh", "overflow-y": "auto",},
             children=[
                 html.H3("Menu", style={"color": "white"}),
                 html.Label("Selecione o documento", style={"color": "white"}),
@@ -85,23 +91,24 @@ layout = html.Div(
                 html.Label("Selecione o anexo", style={"color": "white"}),
                 dcc.Dropdown(id="anexo-dropdown", options=[{"label": str(an), "value": str(an)} for an in [1, 2, 3, 4, 5, 6, 7, 10]], placeholder="Selecione o anexo", style={"width": "100%"}),
                 html.Button("Extrair dados", id="extract-button"),
-                html.Table(id="output-table"),
+            ],
+        ),
+        # Adicione um div separado para a tabela com um fundo branco
+        html.Div(
+            [
+                html.Table(id="output-table", style={"background-color": "white"}),
                 html.Div(id="output-data"),
                 html.Div(id="output-div"),
                 dcc.Download(id="download-link", data=None),
-
-
-
             ],
+            style={"background-color": "white"},
         ),
-        
         components.footer,
     ],
     style={"background-color": "white"},
 )
 
 
+
 if __name__ == "__main__":
     app.run_server()
-
-
