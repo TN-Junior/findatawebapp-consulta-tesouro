@@ -74,8 +74,7 @@ if __name__ == "__main__":
     callbacks(app)
     app.run_server()
 
+ 
 
 
 
-
-#quase finalizado
