@@ -7,7 +7,7 @@ import pandas as pd
 import time
 
 from app.dashboards.utils import components
-from app.dashboards.consulta_tesouro.src.SiconfiHandler import SiconfiHandler  # Import the SiconfiHandler class
+from app.dashboards.consulta_tesouro.SiconfiHandler import SiconfiHandler  # Import the SiconfiHandler class
 
 
 app = dash.Dash(__name__)
@@ -47,7 +47,7 @@ def extract(anos, periodos, documento, anexo, cod_entes, nome_entes):
                     )
                     df = sh.receive_data()
                     dfs.append(df)
-                    time.sleep(0.5)
+                    time.sleep(3)
                 except Exception as e:
                     print(f"Error extracting data: {str(e)}")
     df = pd.concat(dfs)
