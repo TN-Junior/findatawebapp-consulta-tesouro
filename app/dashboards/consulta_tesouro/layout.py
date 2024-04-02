@@ -2,7 +2,7 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-#from dash.dependencies import Input, Output, State
+from dash.dependencies import Input, Output, State
 import pandas as pd
 import time
 
@@ -91,6 +91,11 @@ layout = html.Div(
                 html.Label("Selecione o anexo", style={"color": "white"}),
                 dcc.Dropdown(id="anexo-dropdown", options=[{"label": str(an), "value": str(an)} for an in [1, 2, 3, 4, 5, 6, 7, 10]], placeholder="Selecione o anexo", style={"width": "100%"}),
                 html.Button("Extrair dados", id="extract-button"),
+                dcc.Loading(
+                    id="loading-extract-button",
+                    type="circle",
+                    children=html.Div(id="loading-output"),
+        ),
             ],
         ),
         # Adicione um div separado para a tabela com um fundo branco
@@ -108,7 +113,33 @@ layout = html.Div(
     style={"background-color": "white"},
 )
 
- 
+# Adicione um callback para atualizar o estilo do botão quando clicado
+@app.callback(
+    Output("extract-button", "style"),
+    [Input("extract-button", "n_clicks")],
+    prevent_initial_call=True  # Evita que o callback seja chamado na inicialização
+)
+def update_button_style(n_clicks):
+    if n_clicks % 2 == 1:
+        # Botão foi clicado, altera a cor para azul
+        return {
+            "background-color": "#0f3057",
+            "color": "white",
+            "border": "2px solid #0f3057",
+            "padding": "10px 20px",
+            "cursor": "pointer",
+            "transition": "background-color 0.3s",
+        }
+    else:
+        # Sem clique, estilo padrão
+        return {
+            "background-color": "white",
+            "color": "#0f3057",
+            "border": "2px solid #0f3057",
+            "padding": "10px 20px",
+            "cursor": "pointer",
+            "transition": "background-color 0.3s",
+        }
 
 if __name__ == "__main__":
     app.run_server()

@@ -1,10 +1,8 @@
-#callbacks
 # Importando as bibliotecas e módulos necessários
 from dash import Dash, State, Input, Output, html, dcc
 from app.dashboards.consulta_tesouro.layout import extract, carrega_municipios, generate_output_table, convert_df
 import pandas as pd
 import base64
-
 
 # Carregando a lista de municípios
 df_municipio = carrega_municipios()
@@ -16,6 +14,7 @@ server = app.server
 # Definindo a função de callbacks
 def callbacks(app):
     @app.callback(
+        Output("loading-output", "children"),
         Output("output-div", "children"),
         [Input("extract-button", "n_clicks")],
         [
@@ -29,11 +28,11 @@ def callbacks(app):
     def extract_and_download_data(n_clicks, documento, anos, periodos, entes, anexo):
         # Retorna uma lista vazia na carga inicial da página ou atualização
         if n_clicks is None:
-            return []
+            return [], []
 
         # Verifica se todos os campos obrigatórios foram preenchidos
         if not (documento and anos and periodos and entes and anexo):
-            return [html.H3("Por favor, preencha todos os campos.", style={"color": "black"})]
+            return [html.H3("Por favor, preencha todos os campos.", style={"color": "black"})], []
 
         # Filtra o DataFrame de municípios com base nos entes selecionados
         df_municipios_filtered = df_municipio[df_municipio["cod_completo"].isin(entes)]
@@ -56,7 +55,7 @@ def callbacks(app):
 
         # Prepara a saída para exibição no aplicativo
         output_children = [
-            html.H3("", style={"color": "black"}),
+            html.H3("Dados extraídos:", style={"color": "black"}),
             download_link,
             html.Table(
                 # Cabeçalho da tabela
@@ -67,14 +66,9 @@ def callbacks(app):
             )
         ]
 
-        return output_children
+        return [], output_children
 
 # Registra os callbacks e executa o servidor
 if __name__ == "__main__":
     callbacks(app)
     app.run_server()
-
- 
-
-
-
