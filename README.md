@@ -4,12 +4,9 @@ _A aplicação web de dados da Secretaria de Finanças da prefeitura cidade do R
 
 #### Aqui se encontra dashboards de:
 
-- Receita tributária (DAMs pagos)
-- CAF (comissão administrativa fiscal)
-- CAPAG (capacidade de pagamento dos entes federativos)
-- RREE3-Anexo3 do Sincofi (relatório de execução orçamentária resumida)
-- Monitoramento da SEFIN
-- Central de previsões.
+- Consultas do Tesouro
+- ...
+
 
 ## Rodar a aplicação localmente
 
