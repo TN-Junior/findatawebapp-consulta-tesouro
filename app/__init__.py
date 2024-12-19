@@ -48,7 +48,7 @@ def create_app(config_class=Config):
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
 
-    from app.dashboards.monitoramento.layout import layout
+    '''from app.dashboards.monitoramento.layout import layout
     from app.dashboards.monitoramento.calls import callbacks
     register_dash_app(app, 'Monitoramento', 'monitoramento', layout, callbacks)
 
@@ -76,7 +76,7 @@ def create_app(config_class=Config):
     
     from app.dashboards.pnafm.layout import layout
     from app.dashboards.pnafm.callbacks import callbacks
-    register_dash_app(app, 'PNAFM', 'pnafm', layout, callbacks)
+    register_dash_app(app, 'PNAFM', 'pnafm', layout, callbacks)'''
 
     from app.dashboards.consulta_tesouro.layout import layout
     from app.dashboards.consulta_tesouro.callbacks import callbacks
