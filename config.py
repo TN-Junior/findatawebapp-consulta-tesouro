@@ -16,7 +16,7 @@ class Config(object):
     a boolean flag to enable encrypted connections, 
     and optional username and password
     """
-    env_values = dotenv_values(".flaskenv")
+    env_values = dotenv_values(".env")
 
     MAIL_SERVER = env_values['MAIL_SERVER']
     MAIL_PORT = int(env_values['MAIL_PORT'] or 25)
