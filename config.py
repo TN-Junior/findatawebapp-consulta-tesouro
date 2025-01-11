@@ -11,16 +11,14 @@ class Config(object):
                               'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    """
-    The configuration variables for email include the server and port, 
-    a boolean flag to enable encrypted connections, 
-    and optional username and password
-    """
+    # Carregar variáveis do .env
     env_values = dotenv_values(".env")
 
-    MAIL_SERVER = env_values['MAIL_SERVER']
-    MAIL_PORT = int(env_values['MAIL_PORT'] or 25)
-    MAIL_USE_TLS = env_values['MAIL_USE_TLS'] is not None
-    MAIL_USERNAME = env_values['MAIL_USERNAME']
-    MAIL_PASSWORD = env_values['MAIL_PASSWORD']
-    ADMINS = env_values['ADMINS']
+    # Configurações de e-mail
+    MAIL_SERVER = env_values.get('MAIL_SERVER', 'localhost')  # Valor padrão
+    MAIL_PORT = int(env_values.get('MAIL_PORT', 25))  # Valor padrão
+    MAIL_USE_TLS = env_values.get('MAIL_USE_TLS', 'False').lower() in ['true', '1', 't']
+    MAIL_USERNAME = env_values.get('MAIL_USERNAME', None)
+    MAIL_PASSWORD = env_values.get('MAIL_PASSWORD', None)
+    ADMINS = env_values.get('ADMINS', '').split(',')  # Dividir em lista
+

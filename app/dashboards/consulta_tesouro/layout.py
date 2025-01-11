@@ -83,7 +83,7 @@ layout = html.Div(
                 html.Label("Selecione o documento", style={"color": "white"}),
                 dcc.Dropdown(id="documento-dropdown", options=[{"label": doc, "value": doc.lower()} for doc in documentos], placeholder="Selecione o documento", style={"width": "100%"}),
                 html.Label("Selecione o exercício", style={"color": "white"}),
-                dcc.Dropdown(id="anos-dropdown", options=[{"label": str(ano), "value": ano} for ano in range(2015, 2024)], multi=True, placeholder="Selecione o exercício", style={"width": "100%"}),
+                dcc.Dropdown(id="anos-dropdown", options=[{"label": str(ano), "value": ano} for ano in range(2015, 2026)], multi=True, placeholder="Selecione o exercício", style={"width": "100%"}),
                 html.Label("Selecione o período de referência (bimestre/quadrimestre)", style={"color": "white"}),
                 dcc.Dropdown(id="periodos-dropdown", options=[{"label": str(p), "value": p} for p in range(1, 7)], multi=True, placeholder="Selecione o período de referência", style={"width": "100%"}),
                 html.Label("Selecione o ente", style={"color": "white"}),
