@@ -1,4 +1,4 @@
-#layout
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -33,7 +33,7 @@ def extract(anos, periodos, documento, anexo, cod_entes, nome_entes):
     print("Anexo:", anexo)
     print("Códigos de Ente:", cod_entes)
     print("Nomes de Ente:", nome_entes)
-    sh = SiconfiHandler()  # Initialize the SiconfiHandler
+    sh = SiconfiHandler()  
     dfs = []
     for ano in anos:
         for periodo in periodos:
@@ -51,7 +51,7 @@ def extract(anos, periodos, documento, anexo, cod_entes, nome_entes):
                 except Exception as e:
                     print(f"Error extracting data: {str(e)}")
     df = pd.concat(dfs)
-    print("Total de dados extraídos:", len(df))  # Adicione esta linha para verificar o número de linhas no DataFrame
+    print("Total de dados extraídos:", len(df))
     return df
 
 def generate_output_table(data):
@@ -98,7 +98,7 @@ layout = html.Div(
         ),
             ],
         ),
-        # Adicione um div separado para a tabela com um fundo branco
+
         html.Div(
             [
                 html.Table(id="output-table", style={"background-color": "white"}),
@@ -113,15 +113,15 @@ layout = html.Div(
     style={"background-color": "white"},
 )
 
-# Adicione um callback para atualizar o estilo do botão quando clicado
+
 @app.callback(
     Output("extract-button", "style"),
     [Input("extract-button", "n_clicks")],
-    prevent_initial_call=True  # Evita que o callback seja chamado na inicialização
+    prevent_initial_call=True  
 )
 def update_button_style(n_clicks):
     if n_clicks % 2 == 1:
-        # Botão foi clicado, altera a cor para azul
+
         return {
             "background-color": "#0f3057",
             "color": "white",
@@ -131,7 +131,7 @@ def update_button_style(n_clicks):
             "transition": "background-color 0.3s",
         }
     else:
-        # Sem clique, estilo padrão
+
         return {
             "background-color": "white",
             "color": "#0f3057",
